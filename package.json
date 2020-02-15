@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test":"exit 0",
+    "test": "exit 0",
     "test_with_dburi": "mocha test/test.js --timeout 10000"
   },
-  "keywords": ["mongodb"],
+  "keywords": [
+    "mongodb"
+  ],
   "author": "tom",
   "license": "MIT",
   "dependencies": {
