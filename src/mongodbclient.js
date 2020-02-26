@@ -85,7 +85,7 @@ function c_dbstats(uri,db){return function(){return new Promise(function(resolve
 
 function c_getcollections(uri,db){return function(){return new Promise(function(resolve,reject){
   getconnected(uri).then(function(client){
-    client.db(db).listCollections().toArray(resolve);
+    client.db(db).collections().then(resolve,reject);
   },reject);
 });};}
 
