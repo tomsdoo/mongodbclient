@@ -77,6 +77,18 @@ function c_insertmany(uri,db,collection){return function(items){return new Promi
   }
 });};}
 
+function c_dbstats(uri,db){return function(){return new Promise(function(resolve,reject){
+  getconnected(uri).then(function(client){
+    client.db(db).stats().then(resolve,reject);
+  },reject);
+});};}
+
+function c_getcollections(uri,db){return function(){return new Promise(function(resolve,reject){
+  getconnected(uri).then(function(client){
+    client.db(db).listCollections().toArray(resolve);
+  },reject);
+});};}
+
 const MClient = function(uri,db,collection){
   this.write = c_upsert(uri,db,collection);
   this.read = c_read(uri,db,collection);
@@ -85,6 +97,8 @@ const MClient = function(uri,db,collection){
   this.stats = c_stats(uri,db,collection);
   this.count = c_count(uri,db,collection);
   this.insertMany = c_insertmany(uri,db,collection);
+  this.dbStats = c_dbstats(uri,db);
+  this.getCollections = c_getcollections(uri,db);
 };
 
 module.exports = {MClient:MClient};
