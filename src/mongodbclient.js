@@ -99,6 +99,7 @@ const MClient = function(uri,db,collection){
   this.insertMany = c_insertmany(uri,db,collection);
   this.dbStats = c_dbstats(uri,db);
   this.getCollections = c_getcollections(uri,db);
+  this.connect = function(){return c_getconnected(uri)(db,collection);}
 };
 
 module.exports = {MClient:MClient};
