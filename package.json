@@ -1,9 +1,9 @@
 {
   "name": "@tomsd/mongodbclient",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/mongodbclient.js",
-  "types":"dist/mongodbclient.d.ts",
+  "types": "dist/mongodbclient.d.ts",
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "test": "exit 0",
