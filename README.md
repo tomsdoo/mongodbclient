@@ -16,20 +16,48 @@ const MClient = require("@tomsd/mongodbclient").MClient;
 
 const mdbc = new MClient(uri, dbname, collectionname);
 
-function log(message){console.log(message);}
+const items = [
+  {name:"alice"},
+  {name:"bob"},
+  {name:"charlie"},
+  {name:"alice"}
+];
 
-mdbc.stats().then(log,log);
+mdbc.insertMany(items)
+.then((r) => {
+  console.log(r.insertedCount); // 4
+  return mdbc.getCollections();
+})
+.then((collections) => {
+  console.log(collections.some((collection) => collection.s.namespace.db === dbname));
+  return mdbc.read();
+})
+.then((docs) => {
+  console.log(docs.length >= 4);
+  return mdbc.upsert({_id:docs[0]._id, name:"david"});
+})
+.then((r) => {
+  console.log(r.upsertedCount + r.modifiedCount);
+  return mdbc.distinct("name");
+})
+.then((names) => {
+  console.log(names);
+  return mdbc.stats();
+})
+.then((r) => {
+  console.log(r.storageSize);
+  return mdbc.count();
+})
+.then((n) => {
+  console.log(n);
+  return mdbc.remove();
+})
+.then((r) => {
+  console.log(r.deletedCount);
+})
+.catch((e) => {
+  console.error(e);
+});
 
-mdbc.write({"name":"value"}).then(log,log);
-
-mdbc.read({"name":"value"}).then(log,log);
-
-mdbc.count({"name":"value"}).then(log,log);
-
-mdbc.distinct("name").then(log,log);
-
-mdbc.insertMany([{"name":"value","test":1},{"name":"value","test":2}]).then(log,log);
-
-mdbc.remove({"name":"value"}).then(log,log);
 
 ```

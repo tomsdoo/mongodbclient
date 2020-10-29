@@ -1,89 +1,84 @@
+const mongouri = "mongodb+srv://...";
+const dbName = `db${(new Date()).getTime().toString()}`;
+const collName = `col${(new Date()).getTime().toString()}`;
+
 const assert = require("assert");
+const MClient = require("../dist/mongodbclient.js").MClient;
 
-const def = {
-  uri:"mongodb+srv://...",
-  dbname:"testdb",
-  collectionname:"mycollection"
-};
+const mdbc = new MClient(mongouri, dbName, collName);
 
-const MClient = require("../src/mongodbclient.js").MClient;
+const items = [
+  {name:"alice"},
+  {name:"bob"},
+  {name:"charlie"},
+  {name:"alice"}
+];
 
-
-const mdbc = new MClient(def.uri, def.dbname, def.collectionname);
-
-describe("stats()",function(){
-  it("stats() promises stat data", function(done){
-    mdbc.stats().then(function(stat){
-      assert(stat);
+describe("MClient", function(){
+  it("insertMany()",function(done){
+    mdbc.insertMany(items)
+    .then(function(r){
+      assert.equal(r.insertedCount, items.length);
       done();
-    },function(e){throw e;});
+    });
   });
-});
 
-describe("write()",function(){
-  it("can write", function(done){
-    mdbc.write({test:"test"}).then(function(ro){
-      assert.equal(ro.result.ok,1);
+  it("getCollections()", function(done){
+    mdbc.getCollections()
+    .then(function(collections){
+      assert(collections.length > 0);
       done();
-    }, function(e){throw e;});
+    });
   });
-});
 
-describe("read()", function(){
-  it("can read", function(done){
-    mdbc.read({}).then(function(docs){
-      assert(docs.length >= 0);
-      done();
-    }, function(e){throw e;});
-  });
-});
-
-describe("distinct()", function(){
-  it("can fetch", function(done){
-    mdbc.distinct("test").then(function(values){
-      assert(values.length >= 0);
-      done();
-    }, function(e){throw e;});
-  });
-});
-
-describe("through", function(){
-  const mykey = "a"+(new Date()).getTime();
-  it("write()", function(done){
-    mdbc.write({key:mykey}).then(function(ro){
-      assert(ro.result.ok === 1);
-      done();
-    }, function(e){throw e;});
-  });
   it("read()", function(done){
-    mdbc.read({key:mykey}).then(function(docs){
-      assert(docs.length === 1);
+    mdbc.read()
+    .then(function(docs){
+      assert.equal(docs.length, items.length);
       done();
-    }, function(e){throw e;});
+    });
   });
+
+  it("upsert()", function(done){
+    mdbc.read()
+    .then(function(docs){
+      return mdbc.upsert({_id:docs[0]._id, name:"david"});
+    })
+    .then(function(r){
+      assert.equal(r.modifiedCount, 1);
+      done();
+    });
+  });
+
+  it("distinct()", function(done){
+    mdbc.distinct("name")
+    .then(function(names){
+      assert.equal(names.length, 4);
+      done();
+    });
+  });
+
+  it("stats()", function(done){
+    mdbc.stats()
+    .then(function(r){
+      assert(r.storageSize > 0);
+      done();
+    });
+  });
+
   it("count()", function(done){
-    mdbc.count({key:mykey}).then(function(rcount){
-      assert.equal(rcount,1);
+    mdbc.count({name:"alice"})
+    .then(function(n){
+      assert.equal(n,1);
       done();
-    }, function(e){throw e;});
+    });
   });
+
   it("remove()", function(done){
-    mdbc.remove({key:mykey}).then(function(ro){
-      assert(ro.result.n === 1);
+    mdbc.remove()
+    .then(function(r){
+      assert.equal(r.deletedCount, items.length);
       done();
-    }, function(e){throw e;});
-  });
-  it("insertMany()", function(done){
-    const items = [0,1,2,3,4].map(function(i){return {key:mykey, n:i};});
-    mdbc.insertMany(items).then(function(ro){
-      assert(ro.result.n === items.length);
-      done();
-    },function(e){throw e;});
-  });
-  it("remove()", function(done){
-    mdbc.remove({key:mykey}).then(function(ro){
-      assert(ro.result.n === 5);
-      done();
-    }, function(e){throw e;});
+    });
   });
 });

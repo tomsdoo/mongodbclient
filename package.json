@@ -2,10 +2,12 @@
   "name": "@tomsd/mongodbclient",
   "version": "1.0.3",
   "description": "",
-  "main": "index.js",
+  "main": "dist/mongodbclient.js",
+  "types":"dist/mongodbclient.d.ts",
   "scripts": {
+    "build": "tsc --build tsconfig.json",
     "test": "exit 0",
-    "test_with_dburi": "mocha test/test.js --timeout 10000"
+    "test_with_dburi": "mocha test/test.js --timeout 20000"
   },
   "keywords": [
     "mongodb"
@@ -13,10 +15,13 @@
   "author": "tom",
   "license": "MIT",
   "dependencies": {
-    "@tomsd/rand": "^1.0.10",
-    "mongodb": "^3.5.3"
+    "@tomsd/rand": "^3.0.0",
+    "mongodb": "^3.6.2"
   },
   "devDependencies": {
-    "mocha": "^7.0.1"
+    "@types/mongodb": "^3.5.31",
+    "@types/node": "^14.14.5",
+    "mocha": "^7.0.1",
+    "typescript": "^4.0.5"
   }
 }
