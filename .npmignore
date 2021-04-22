@@ -1,6 +1,8 @@
 node_modules/
 src/
 package-lock.json
-tsconfig.json
+tsconfig.base.json
+tsconfig.esm.json
+tsconfig.cjs.json
 .npmignore
 .gitignore

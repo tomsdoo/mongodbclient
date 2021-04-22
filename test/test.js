@@ -3,7 +3,7 @@ const dbName = `db${(new Date()).getTime().toString()}`;
 const collName = `col${(new Date()).getTime().toString()}`;
 
 const assert = require("assert");
-const MClient = require("../dist/mongodbclient.js").MClient;
+const MClient = require("../dist/cjs/mongodbclient.js").MClient;
 
 const mdbc = new MClient(mongouri, dbName, collName);
 
