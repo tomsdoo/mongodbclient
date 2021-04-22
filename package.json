@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@tomsd/rand": "^3.0.0",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.6"
   },
   "devDependencies": {
     "@types/mongodb": "^3.5.31",

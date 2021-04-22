@@ -71,7 +71,7 @@ export class MClient {
     return new Promise(function(resolve,reject){
       that.getConnected()
       .then(function(conn){
-        conn.collection.updateOne({_id:pobj._id},{$set:pobj},{upsert:true,w:1})
+        conn.collection.updateOne({_id:pobj._id},{$set:pobj},{upsert:true, writeConcern: {w:1} })
         .then(function(r:typeof UpdateWriteOpResult){
           conn.client.close();
           resolve(r);
@@ -123,7 +123,7 @@ export class MClient {
     return new Promise(function(resolve,reject){
       that.getConnected()
       .then(function(conn){
-        conn.collection.deleteMany(condition, {w:1})
+        conn.collection.deleteMany(condition, {writeConcern: {w:1} })
         .then(function(r:typeof deleteWriteOpResult){
           conn.client.close();
           resolve(r);
@@ -177,7 +177,7 @@ export class MClient {
     return new Promise(function(resolve,reject){
       that.getConnected()
       .then(function(conn){
-        conn.collection.insertMany(items, {w:1})
+        conn.collection.insertMany(items, {writeConcern: {w:1} })
         .then(function(r:typeof insertWriteOpResult){
           conn.client.close();
           resolve(r);
