@@ -14,71 +14,45 @@ const items = [
   {name:"alice"}
 ];
 
-describe("MClient", function(){
-  it("insertMany()",function(done){
-    mdbc.insertMany(items)
-    .then(function(r){
-      assert.equal(r.insertedCount, items.length);
-      done();
-    });
+describe("MClient", () => {
+  it("insertMany()", async () => {
+    const { insertedCount } = await mdbc.insertMany(items)
+    assert.equal(insertedCount, items.length);
   });
 
-  it("getCollections()", function(done){
-    mdbc.getCollections()
-    .then(function(collections){
-      assert(collections.length > 0);
-      done();
-    });
+  it("getCollections()", async () => {
+    const collections = await mdbc.getCollections();
+    assert(collections.length > 0);
   });
 
-  it("read()", function(done){
-    mdbc.read()
-    .then(function(docs){
-      assert.equal(docs.length, items.length);
-      done();
-    });
+  it("read()", async () => {
+    const docs = await mdbc.read();
+    assert.equal(docs.length, items.length);
   });
 
-  it("upsert()", function(done){
-    mdbc.read()
-    .then(function(docs){
-      return mdbc.upsert({_id:docs[0]._id, name:"david"});
-    })
-    .then(function(r){
-      assert.equal(r.modifiedCount, 1);
-      done();
-    });
+  it("upsert()", async () => {
+    const docs = await mdbc.read();
+    const { modifiedCount } = await mdbc.upsert({ _id: docs[0]._id, name: "david" });
+    assert.equal(modifiedCount, 1);
   });
 
-  it("distinct()", function(done){
-    mdbc.distinct("name")
-    .then(function(names){
-      assert.equal(names.length, 4);
-      done();
-    });
+  it("distinct()", async () => {
+    const names = await mdbc.distinct("name");
+    assert.equal(names.length, 4);
   });
 
-  it("stats()", function(done){
-    mdbc.stats()
-    .then(function(r){
-      assert(r.storageSize > 0);
-      done();
-    });
+  it("stats()", async () => {
+    const { storageSize } = await mdbc.stats();
+    assert(storageSize > 0);
   });
 
-  it("count()", function(done){
-    mdbc.count({name:"alice"})
-    .then(function(n){
-      assert.equal(n,1);
-      done();
-    });
+  it("count()", async () => {
+    const n = await mdbc.count({name:"alice"});
+    assert.equal(n,1);
   });
 
-  it("remove()", function(done){
-    mdbc.remove()
-    .then(function(r){
-      assert.equal(r.deletedCount, items.length);
-      done();
-    });
+  it("remove()", async () => {
+    const { deletedCount } = await mdbc.remove();
+    assert.equal(deletedCount, items.length);
   });
 });
