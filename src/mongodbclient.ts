@@ -199,22 +199,15 @@ export class MClient {
       }, reject);
     });
   }
-  public getCollections(){
-    const that = this;
-    return new Promise<(typeof Collection)[]>(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.db.collections()
-        .then(function(r:any){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      },reject);
-    });
+  public async getCollections(){
+    const connection = await this.getConnected();
+    try{
+      return await connection.db.collections();
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
 }
 
