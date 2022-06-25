@@ -130,22 +130,15 @@ export class MClient {
       },reject);
     });
   }
-  public stats(){
-    const that = this;
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.stats()
-        .then(function(r:any){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      }, reject);
-    });
+  public async stats(){
+    const connection = await this.getConnected();
+    try{
+      return await connection.collection.stats();
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public async count(condition:any = {}): Promise<number>{
     const connection = await this.getConnected();
