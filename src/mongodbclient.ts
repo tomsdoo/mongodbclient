@@ -152,22 +152,15 @@ export class MClient {
       }, reject);
     });
   }
-  public count(condition:any = {}){
-    const that = this;
-    return new Promise<number>(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.countDocuments(condition)
-        .then(function(r:number){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      },reject);
-    });
+  public async count(condition:any = {}): Promise<number>{
+    const connection = await this.getConnected();
+    try{
+      return await connection.collection.countDocuments(condition);
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public insertMany(items:any[]){
     const that = this;
