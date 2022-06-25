@@ -101,7 +101,7 @@ export class MClient {
       });
     });
   }
-  public distinct(key:string, condition:any){
+  public distinct(key:string, condition:any = {}){
     const that = this;
     return new Promise(function(resolve,reject){
       that.getConnected()
