@@ -182,22 +182,15 @@ export class MClient {
       },reject);
     });
   }
-  public dbStats(){
-    const that = this;
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.db.stats()
-        .then(function(r:any){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      }, reject);
-    });
+  public async dbStats(){
+    const connection = await this.getConnected();
+    try{
+      return await connection.db.stats();
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public async getCollections(){
     const connection = await this.getConnected();
