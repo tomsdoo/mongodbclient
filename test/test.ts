@@ -43,7 +43,7 @@ describe("MClient", () => {
   });
 
   it("distinct()", async () => {
-    const names = (await mdbc.distinct("name", {})) as string[];
+    const names = (await mdbc.distinct("name")) as string[];
     assert.equal(names.length, 4);
   });
 
