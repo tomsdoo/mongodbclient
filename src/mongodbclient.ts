@@ -7,7 +7,7 @@ const MongoClient = require("mongodb").MongoClient;
 const Db = require("mongodb").Db;
 
 const {Collection, UpdateWriteOpResult, deleteWriteOpResult, insertWriteOpResult} = require("mongodb");
-const rand = require("@tomsd/rand").default;
+import { v4 as uuidv4 } from "uuid";
 
 export class MongoConnection {
   private _client: typeof MongoClient;
@@ -67,7 +67,7 @@ export class MClient {
   }
   public upsert(pobj:any){
     const that = this;
-    pobj._id = "_id" in pobj ? pobj._id : rand.id(rand.char());
+    pobj._id = "_id" in pobj ? pobj._id : uuidv4();
     return new Promise(function(resolve,reject){
       that.getConnected()
       .then(function(conn){
@@ -172,7 +172,7 @@ export class MClient {
   public insertMany(items:any[]){
     const that = this;
     items.forEach(function(item){
-      item._id = item._id ? item._id : rand.id(rand.char());
+      item._id = item._id ? item._id : uuidv4();
     });
     return new Promise(function(resolve,reject){
       that.getConnected()
