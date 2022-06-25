@@ -47,6 +47,11 @@ describe("MClient", () => {
     assert.equal(names.length, 4);
   });
 
+  it("dbStats()", async () => {
+    const { storageSize } = (await mdbc.dbStats()) as { storageSize: number };
+    assert(storageSize > 0);
+  });
+
   it("stats()", async () => {
     const { storageSize } = (await mdbc.stats()) as { storageSize: number };
     assert(storageSize > 0);
