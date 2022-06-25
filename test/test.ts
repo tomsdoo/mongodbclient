@@ -32,12 +32,12 @@ describe("MClient", () => {
   });
 
   it("read()", async () => {
-    const docs = (await mdbc.read({})) as any[];
+    const docs = (await mdbc.read()) as any[];
     assert.equal(docs.length, items.length);
   });
 
   it("upsert()", async () => {
-    const docs = (await mdbc.read({})) as any[];
+    const docs = (await mdbc.read()) as any[];
     const { modifiedCount } = (await mdbc.upsert({ _id: docs[0]._id, name: "david" })) as { modifiedCount: number };
     assert.equal(modifiedCount, 1);
   });
