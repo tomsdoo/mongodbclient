@@ -152,7 +152,7 @@ export class MClient {
       }, reject);
     });
   }
-  public count(condition:any){
+  public count(condition:any = {}){
     const that = this;
     return new Promise<number>(function(resolve,reject){
       that.getConnected()
