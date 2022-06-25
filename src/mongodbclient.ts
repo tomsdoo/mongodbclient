@@ -50,20 +50,15 @@ export class MClient {
   public connect(){
     return this.getConnected();
   }
-  protected getConnected(){
-    const that = this;
-    const client = new MongoClient(that.m_uri, {useUnifiedTopology:true});
-    return new Promise<MongoConnection>(function(resolve,reject){
-      client.connect()
-      .then(function(client: typeof MongoClient){
-        const db = client.db(that.m_db);
-        const collection = db.collection(that.m_collection);
-        resolve(new MongoConnection(client, db, collection));
-      })
-      .catch(function(e:Error){
-        reject(e);
+  protected async getConnected(){
+    const client = new MongoClient(this.m_uri, {useUnifiedTopology:true});
+    return client
+      .connect()
+      .then((client: typeof MongoClient) => {
+        const db = client.db(this.m_db);
+        const collection = db.collection(this.m_collection);
+        return new MongoConnection(client, db, collection);
       });
-    });
   }
   public upsert(pobj:any){
     const that = this;
