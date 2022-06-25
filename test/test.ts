@@ -1,9 +1,13 @@
+// @ts-ignore
+import dotenv from "dotenv";
+dotenv.config();
+
 import {describe, it } from "mocha";
 import { MClient } from "../src/mongodbclient";
 import { strict as assert } from "assert";
 import { v4 as uuidv4 } from "uuid";
 
-const mongouri = "mongodb+srv://...";
+const mongouri = process.env.MONGODB_URI as string;
 const dbName = uuidv4();
 const collName = uuidv4();
 
