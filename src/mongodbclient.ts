@@ -83,7 +83,7 @@ export class MClient {
       },reject);
     });
   }
-  public read(condition:any,opt?:any){
+  public read(condition: any = {}, opt?:any){
     const that = this;
     return new Promise(function(resolve,reject){
       that.getConnected()
