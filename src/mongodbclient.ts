@@ -60,23 +60,23 @@ export class MClient {
         return new MongoConnection(client, db, collection);
       });
   }
-  public upsert(pobj:any){
-    const that = this;
-    pobj._id = "_id" in pobj ? pobj._id : uuidv4();
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.updateOne({_id:pobj._id},{$set:pobj},{upsert:true, writeConcern: {w:1} })
-        .then(function(r:typeof UpdateWriteOpResult){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      },reject);
-    });
+  public async upsert(pobj:any){
+    const savingObj = {
+      _id: uuidv4(),
+      ...pobj
+    };
+    const connection = await this.getConnected();
+    try{
+      return await connection.collection.updateOne(
+        { _id: savingObj._id },
+        { $set: savingObj },
+        { upsert: true, writeConcern: { w: 1 } }
+      );
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public read(condition: any = {}, opt?:any){
     const that = this;
