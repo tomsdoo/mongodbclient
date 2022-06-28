@@ -78,23 +78,18 @@ export class MClient {
       connection.client.close();
     }
   }
-  public read(condition: any = {}, opt?:any){
-    const that = this;
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.find(condition, opt)
-        .toArray()
-        .then(function(docs : any[]){
-          conn.client.close();
-          resolve(docs);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      });
-    });
+  public async read(condition: any = {}, opt?:any){
+    const connection = await this.getConnected();
+    try{
+      return await connection
+        .collection
+        .find(condition, opt)
+        .toArray();
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public distinct(key:string, condition:any = {}){
     const that = this;
