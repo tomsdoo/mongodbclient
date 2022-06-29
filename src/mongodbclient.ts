@@ -91,22 +91,15 @@ export class MClient {
       connection.client.close();
     }
   }
-  public distinct(key:string, condition:any = {}){
-    const that = this;
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.distinct(key,condition)
-        .then(function(values:any[]){
-          conn.client.close();
-          resolve(values);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      });
-    });
+  public async distinct(key:string, condition:any = {}){
+    const connection = await this.getConnected();
+    try{
+      return await connection.collection.distinct(key, condition);
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public remove(condition:any){
     const that = this;
