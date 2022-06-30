@@ -101,22 +101,15 @@ export class MClient {
       connection.client.close();
     }
   }
-  public remove(condition:any){
-    const that = this;
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.deleteMany(condition, {writeConcern: {w:1} })
-        .then(function(r:typeof deleteWriteOpResult){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      },reject);
-    });
+  public async remove(condition:any){
+    const connection = await this.getConnected();
+    try{
+      return await connection.collection.deleteMany(condition, { writeConcern: { w: 1} });
+    }catch(e){
+      throw e;
+    }finally{
+      connection.client.close();
+    }
   }
   public async stats(){
     const connection = await this.getConnected();
