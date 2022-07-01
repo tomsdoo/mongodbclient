@@ -13,7 +13,9 @@ const collName = uuidv4();
 
 const mdbc = new MClient(mongouri, dbName, collName);
 
-const items = [
+type Seed = { name: string; };
+
+const items: Seed[] = [
   {name:"alice"},
   {name:"bob"},
   {name:"charlie"},
@@ -32,8 +34,10 @@ describe("MClient", () => {
   });
 
   it("read()", async () => {
-    const docs = (await mdbc.read()) as any[];
-    assert.equal(docs.length, items.length);
+    const docs = await mdbc.read<Seed & { _id: string; }>();
+    const getNames = (items: Seed[]) =>
+      Array.from(new Set(items.map(({ name }) => name))).sort().join("\n");
+    assert.equal(getNames(docs), getNames(docs));
   });
 
   it("upsert()", async () => {

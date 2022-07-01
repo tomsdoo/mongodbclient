@@ -78,7 +78,7 @@ export class MClient {
       connection.client.close();
     }
   }
-  public async read(condition: any = {}, opt?:any){
+  public async read<T = any>(condition: any = {}, opt?:any): Promise<T[]>{
     const connection = await this.getConnected();
     try{
       return await connection
