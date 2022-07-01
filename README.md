@@ -16,11 +16,19 @@ const collectionname = "mycollection";
 
 const mdbc = new MClient(uri, dbname, collectionname);
 
-const items = [
-  {name:"alice"},
-  {name:"bob"},
-  {name:"charlie"},
-  {name:"alice"}
+type Seed = {
+  name: string;
+};
+
+type Entry = Seed & {
+  _id: string;
+};
+
+const items: Seed[] = [
+  { name: "alice" },
+  { name: "bob" },
+  { name: "charlie" },
+  { name: "alice" }
 ];
 
 mdbc.insertMany(items)
@@ -31,12 +39,12 @@ mdbc.insertMany(items)
   .then((collections) => {
     console.log(
       collections.find(
-        collection => collection.s.namespace.db === dbname
+        (collection: any) => collection.s.namespace.db === dbname
       )
     );
-    return mdbc.read({});
+    return mdbc.read<Entry>();
   })
-  .then((docs: any) => {
+  .then((docs) => {
     console.log({
       docs,
       state: docs.length >= 4
