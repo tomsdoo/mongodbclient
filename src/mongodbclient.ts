@@ -131,25 +131,24 @@ export class MClient {
       connection.client.close();
     }
   }
-  public insertMany(items:any[]){
-    const that = this;
-    items.forEach(function(item){
-      item._id = item._id ? item._id : uuidv4();
-    });
-    return new Promise(function(resolve,reject){
-      that.getConnected()
-      .then(function(conn){
-        conn.collection.insertMany(items, {writeConcern: {w:1} })
-        .then(function(r:typeof insertWriteOpResult){
-          conn.client.close();
-          resolve(r);
-        })
-        .catch(function(e:Error){
-          conn.client.close();
-          reject(e);
-        });
-      },reject);
-    });
+  public async insertMany(items:any[]){
+    const connection = await this.getConnected();
+    const savingItems = items.map(item => ({
+      _id: uuidv4(),
+      ...item
+    }));
+    try{
+      return await connection.collection
+        .insertMany(
+          savingItems,
+          { writeConcern: {w: 1}}
+        );
+    }catch(e){
+      throw e;
+    }
+    finally{
+      connection.client.close();
+    }
   }
   public async dbStats(){
     const connection = await this.getConnected();
