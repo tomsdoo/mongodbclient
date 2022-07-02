@@ -13,9 +13,7 @@ const collName = uuidv4();
 
 const mdbc = new MClient(mongouri, dbName, collName);
 
-type Seed = { name: string; };
-
-const items: Seed[] = [
+const items = [
   {name:"alice"},
   {name:"bob"},
   {name:"charlie"},
@@ -24,7 +22,7 @@ const items: Seed[] = [
 
 describe("MClient", () => {
   it("insertMany()", async () => {
-    const { insertedCount } = (await mdbc.insertMany(items)) as { insertedCount: number };
+    const { insertedCount } = await mdbc.insertMany(items);
     assert.equal(insertedCount, items.length);
   });
 
@@ -34,30 +32,30 @@ describe("MClient", () => {
   });
 
   it("read()", async () => {
-    const docs = await mdbc.read<Seed & { _id: string; }>();
-    const getNames = (items: Seed[]) =>
+    const docs = await mdbc.read();
+    const getNames = (items: any[]) =>
       Array.from(new Set(items.map(({ name }) => name))).sort().join("\n");
     assert.equal(getNames(docs), getNames(docs));
   });
 
   it("upsert()", async () => {
-    const docs = (await mdbc.read()) as any[];
-    const { modifiedCount } = (await mdbc.upsert({ _id: docs[0]._id, name: "david" })) as { modifiedCount: number };
+    const docs = await mdbc.read();
+    const { modifiedCount } = await mdbc.upsert({ _id: docs[0]._id, name: "david" });
     assert.equal(modifiedCount, 1);
   });
 
   it("distinct()", async () => {
-    const names = (await mdbc.distinct("name")) as string[];
+    const names = await mdbc.distinct("name");
     assert.equal(names.length, 4);
   });
 
   it("dbStats()", async () => {
-    const { storageSize } = (await mdbc.dbStats()) as { storageSize: number };
+    const { storageSize } = await mdbc.dbStats();
     assert(storageSize > 0);
   });
 
   it("stats()", async () => {
-    const { storageSize } = (await mdbc.stats()) as { storageSize: number };
+    const { storageSize } = await mdbc.stats();
     assert(storageSize > 0);
   });
 
@@ -67,7 +65,7 @@ describe("MClient", () => {
   });
 
   it("remove()", async () => {
-    const { deletedCount } = (await mdbc.remove({})) as { deletedCount: number };
+    const { deletedCount } = await mdbc.remove({});
     assert.equal(deletedCount, items.length);
   });
 });
