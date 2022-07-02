@@ -1,5 +1,12 @@
 # @tomsd/mongodbclient
 
+![npm](https://img.shields.io/npm/v/@tomsd/mongodbclient)
+![NPM](https://img.shields.io/npm/l/@tomsd/mongodbclient)
+![npms.io (quality)](https://img.shields.io/npms-io/quality-score/@tomsd/mongodbclient)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@tomsd/mongodbclient)
+![Maintenance](https://img.shields.io/maintenance/yes/2022)
+![depends on mongodb@4](https://img.shields.io/badge/depends%20on-mongodb@4-informational)
+
 ## Installation
 ``` sh
 npm install @tomsd/mongodbclient
