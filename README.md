@@ -11,70 +11,51 @@ npm install @tomsd/mongodbclient
 import { MClient } from "@tomsd/mongodbclient";
 
 const uri = "mongodb+srv://...";
-const dbname = "mydb";
-const collectionname = "mycollection";
+const dbName = "mydb";
+const collectionName = "mycollection";
 
-const mdbc = new MClient(uri, dbname, collectionname);
+const mdbc = new MClient(uri, dbName, collectionName);
 
-type Seed = {
-  name: string;
-};
-
-type Entry = Seed & {
-  _id: string;
-};
-
-const items: Seed[] = [
+const items = [
   { name: "alice" },
   { name: "bob" },
   { name: "charlie" },
   { name: "alice" }
 ];
 
-mdbc.insertMany(items)
-  .then((r: any) => {
-    console.log(r.insertedCount); // 4
-    return mdbc.getCollections();
-  })
-  .then((collections) => {
-    console.log(
-      collections.find(
-        (collection: any) => collection.s.namespace.db === dbname
-      )
-    );
-    return mdbc.read<Entry>();
-  })
-  .then((docs) => {
-    console.log({
-      docs,
-      state: docs.length >= 4
-    });
-    return mdbc.upsert({
-      _id:docs[0]._id,
-      name:"david"
-    });
-  })
-  .then((r: any) => {
-    console.log(r.upsertedCount + r.modifiedCount);
-    return mdbc.distinct("name", {});
-  })
-  .then((names) => {
-    console.log(names);
-    return mdbc.stats();
-  })
-  .then((r: any) => {
-    console.log(r.storageSize);
-    return mdbc.count({});
-  })
-  .then((n) => {
-    console.log(n);
-    return mdbc.remove({});
-  })
-  .then((r: any) => {
-    console.log(r.deletedCount);
-  })
-  .catch((e) => {
-    console.error(e);
+(async () => {
+  const { insertedCount } = await mdbc.insertMany(items);
+  console.log(insertedCount); // 4
+
+  const collections = await mdbc.getCollections();
+  console.log(
+    collections.some(
+      // @ts-ignore
+      collection => collection.s.namespace.db === dbName
+    )
+  ); // true
+
+  const docs = await mdbc.read();
+  console.log(docs);
+
+  const { upsertedCount, modifiedCount } = await mdbc.upsert({
+    ...docs[0],
+    name: "david"
   });
+  console.log(`upsertedCount: ${upsertedCount}, modifiedCount: ${modifiedCount}`);
+
+  const names = await mdbc.distinct("name");
+  console.log(`distinct names: ${names.length}`); // 4
+
+  const { storageSize } = await mdbc.stats();
+  console.log(`storageSize: ${storageSize}`);
+
+  const itemLength = await mdbc.count();
+  console.log(`count: ${itemLength}`); // 4
+
+  const { deletedCount } = await mdbc.remove({});
+  console.log(`deletedCount: ${deletedCount}`); // 4
+
+})();
 
 ```
