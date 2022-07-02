@@ -4,27 +4,26 @@
  * License: MIT
 */
 const MongoClient = require("mongodb").MongoClient;
-const Db = require("mongodb").Db;
 
-const {Collection, UpdateWriteOpResult, deleteWriteOpResult, insertWriteOpResult} = require("mongodb");
+import { Db, Collection, CollStats, WithId, Document, InsertManyResult, UpdateResult, DeleteResult } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 
 export class MongoConnection {
   private _client: typeof MongoClient;
-  private _db: typeof Db;
-  private _collection:typeof Collection;
-  constructor(client : typeof MongoClient, db : typeof Db, collection : any ){
+  private _db: Db;
+  private _collection: Collection;
+  constructor(client: typeof MongoClient, db: Db, collection: Collection ){
     this._client = client;
     this._db = db;
     this._collection = collection;
   }
-  get client() : typeof MongoClient{
+  get client(): typeof MongoClient{
     return this._client;
   }
-  get db() : typeof Db{
+  get db(): Db {
     return this._db;
   }
-  get collection() :any {
+  get collection(): Collection {
     return this._collection;
   }
 }
@@ -47,10 +46,10 @@ export class MClient {
   get collection() : string {
     return this.m_collection;
   }
-  public connect(){
+  public async connect(): Promise<MongoConnection>{
     return this.getConnected();
   }
-  protected async getConnected(){
+  protected async getConnected(): Promise<MongoConnection>{
     const client = new MongoClient(this.m_uri, {useUnifiedTopology:true});
     return client
       .connect()
@@ -78,7 +77,7 @@ export class MClient {
       connection.client.close();
     }
   }
-  public async read<T = any>(condition: any = {}, opt?:any): Promise<T[]>{
+  public async read(condition: any = {}, opt?:any){
     const connection = await this.getConnected();
     try{
       return await connection
@@ -91,17 +90,17 @@ export class MClient {
       connection.client.close();
     }
   }
-  public async distinct(key:string, condition:any = {}){
+  public async distinct(key:string, condition:any = {}): Promise<any[]>{
     const connection = await this.getConnected();
     try{
-      return await connection.collection.distinct(key, condition);
+      return ((await connection.collection.distinct(key, condition)) as unknown) as any[];
     }catch(e){
       throw e;
     }finally{
       connection.client.close();
     }
   }
-  public async remove(condition:any){
+  public async remove(condition:any): Promise<DeleteResult>{
     const connection = await this.getConnected();
     try{
       return await connection.collection.deleteMany(condition, { writeConcern: { w: 1} });
@@ -111,7 +110,7 @@ export class MClient {
       connection.client.close();
     }
   }
-  public async stats(){
+  public async stats(): Promise<CollStats>{
     const connection = await this.getConnected();
     try{
       return await connection.collection.stats();
@@ -124,14 +123,14 @@ export class MClient {
   public async count(condition:any = {}): Promise<number>{
     const connection = await this.getConnected();
     try{
-      return await connection.collection.countDocuments(condition);
+      return ((await connection.collection.countDocuments(condition)) as unknown) as number;
     }catch(e){
       throw e;
     }finally{
       connection.client.close();
     }
   }
-  public async insertMany(items:any[]){
+  public async insertMany(items:any[]) {
     const connection = await this.getConnected();
     const savingItems = items.map(item => ({
       _id: uuidv4(),
@@ -160,7 +159,7 @@ export class MClient {
       connection.client.close();
     }
   }
-  public async getCollections(){
+  public async getCollections(): Promise<Collection[]>{
     const connection = await this.getConnected();
     try{
       return await connection.db.collections();
