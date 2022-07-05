@@ -34,14 +34,6 @@ const items = [
   const { insertedCount } = await mdbc.insertMany(items);
   console.log(insertedCount); // 4
 
-  const collections = await mdbc.getCollections();
-  console.log(
-    collections.some(
-      // @ts-ignore
-      collection => collection.s.namespace.db === dbName
-    )
-  ); // true
-
   const docs = await mdbc.read();
   console.log(docs);
 
