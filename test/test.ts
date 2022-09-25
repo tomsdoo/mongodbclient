@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import {describe, it } from "mocha";
+import { describe, it } from "mocha";
 import { MClient } from "../src/mongodbclient";
 import { strict as assert } from "assert";
 import { v4 as uuidv4 } from "uuid";
@@ -14,10 +14,10 @@ const collName = uuidv4();
 const mdbc = new MClient(mongouri, dbName, collName);
 
 const items = [
-  {name:"alice"},
-  {name:"bob"},
-  {name:"charlie"},
-  {name:"alice"}
+  { name: "alice" },
+  { name: "bob" },
+  { name: "charlie" },
+  { name: "alice" },
 ];
 
 describe("MClient", () => {
@@ -34,13 +34,18 @@ describe("MClient", () => {
   it("read()", async () => {
     const docs = await mdbc.read();
     const getNames = (items: any[]) =>
-      Array.from(new Set(items.map(({ name }) => name))).sort().join("\n");
+      Array.from(new Set(items.map(({ name }) => name)))
+        .sort()
+        .join("\n");
     assert.equal(getNames(docs), getNames(docs));
   });
 
   it("upsert()", async () => {
     const docs = await mdbc.read();
-    const { modifiedCount } = await mdbc.upsert({ _id: docs[0]._id, name: "david" });
+    const { modifiedCount } = await mdbc.upsert({
+      _id: docs[0]._id,
+      name: "david",
+    });
     assert.equal(modifiedCount, 1);
   });
 
@@ -60,8 +65,8 @@ describe("MClient", () => {
   });
 
   it("count()", async () => {
-    const n = await mdbc.count({name:"alice"});
-    assert.equal(n,1);
+    const n = await mdbc.count({ name: "alice" });
+    assert.equal(n, 1);
   });
 
   it("remove()", async () => {
