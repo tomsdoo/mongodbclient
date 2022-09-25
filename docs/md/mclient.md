@@ -1,6 +1,6 @@
 # MClient
 
-`MClient` class is exported from `@tomsd/mongodbclient`.
+`MClient` class is exported from [@tomsd/mongodbclient](https://www.npmjs.com/package/@tomsd/mongodbclient).
 
 ``` mermaid
 classDiagram
