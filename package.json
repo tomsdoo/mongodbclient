@@ -7,10 +7,12 @@
   "types": "dist/esm/mongodbclient.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
+    "format": "npm run format:src && npm run format:test",
     "format:src": "prettier --write src/**/*.ts",
     "format:test": "prettier --write test/**/*.ts",
     "lint:src": "eslint src/**/*.ts",
     "lint:test": "eslint test/**/*.ts",
+    "prepare": "husky install",
     "test": "exit 0",
     "test_with_dburi": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register \"test/test.ts\" --timeout 30000"
   },
@@ -39,6 +41,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.0.1",
+    "husky": "^8.0.1",
     "mocha": "^7.0.1",
     "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
