@@ -1,11 +1,9 @@
-// @ts-ignore
-import dotenv from "dotenv";
-dotenv.config();
-
 import { describe, it } from "mocha";
 import { MClient } from "../src/mongodbclient";
 import { strict as assert } from "assert";
 import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
+dotenv.config();
 
 const mongouri = process.env.MONGODB_URI as string;
 const dbName = uuidv4();
@@ -33,9 +31,9 @@ describe("MClient", () => {
 
   it("read()", async () => {
     const docs = await mdbc.read();
-    const getNames = (items: any[]) =>
+    const getNames = (items: any[]): string =>
       Array.from(new Set(items.map(({ name }) => name)))
-        .sort()
+        .sort((a,b) => a > b ? 1 : -1)
         .join("\n");
     assert.equal(getNames(docs), getNames(docs));
   });
