@@ -33,7 +33,7 @@ describe("MClient", () => {
     const docs = await mdbc.read();
     const getNames = (items: any[]): string =>
       Array.from(new Set(items.map(({ name }) => name)))
-        .sort((a,b) => a > b ? 1 : -1)
+        .sort((a, b) => (a > b ? 1 : -1))
         .join("\n");
     assert.equal(getNames(docs), getNames(docs));
   });

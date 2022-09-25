@@ -3,19 +3,19 @@
  * (c) 2020 tom
  * License: MIT
  */
- import {
-   Db,
-   Collection,
-   CollStats,
-   DeleteResult,
-   Document,
-   InsertManyResult,
-   UpdateResult,
-   WithId
- } from "mongodb";
- import { v4 as uuidv4 } from "uuid";
+import {
+  Db,
+  Collection,
+  CollStats,
+  DeleteResult,
+  Document,
+  InsertManyResult,
+  UpdateResult,
+  WithId,
+} from "mongodb";
+import { v4 as uuidv4 } from "uuid";
 
- // eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const MongoClient = require("mongodb").MongoClient;
 
 export class MongoConnection {
@@ -93,7 +93,10 @@ export class MClient {
     }
   }
 
-  public async read(condition: any = {}, opt?: any): Promise<Array<WithId<Document>>> {
+  public async read(
+    condition: any = {},
+    opt?: any
+  ): Promise<Array<WithId<Document>>> {
     const connection = await this.getConnected();
     try {
       return await connection.collection.find(condition, opt).toArray();
