@@ -16,6 +16,12 @@
     "test": "exit 0",
     "test_with_dburi": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register \"test/test.ts\" --timeout 30000"
   },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "npm run lint:src",
+      "npm run format:src"
+    ]
+  },
   "keywords": [
     "mongodb"
   ],
