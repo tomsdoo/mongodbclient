@@ -1,0 +1,96 @@
+# MClient
+
+`MClient` class is exported from `@tomsd/mongodbclient`.
+
+``` mermaid
+classDiagram
+class MClient {
+  +constructor(uri: string, db: string, collection: string)
+  +upsert(pobj: any) Promise~UpdateResult~
+  +read(condition: any, opt?: any) Promise~DocumentArray~
+  +distinct(key: string, condition?: any) Promise~AnyArray~
+  +remove(condition: any) Promise~DeleteResult~
+  +count(condition?: any) Promise~number~
+  +insertMany(items: any[]) Promise~InsertManyResult~
+  +stats() Promise~CollStats~
+  +dbStats() Promise~Document~
+}
+```
+***
+
+## read()
+
+``` typescript
+read(condition: any, opt?: any) => Promise<Array<WithId<Document>>>
+```
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|condition|Yes|`{ name: "test" }`|condition to read|
+|2|opt|No|`{ limit: 1 }`|[FindOptions](https://mongodb.github.io/node-mongodb-native/4.10/interfaces/FindOptions.html)|
+
+***
+
+## upsert()
+
+``` typescript
+upsert(pobj: any) => Promise<UpdateResult>
+```
+
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|pobj|Yes|`{ name: "test" }`|object to be upserted|
+
+***
+
+## distinct()
+
+``` typescript
+distinct(key: string, condition: any = {}) => Promise<any[]>
+```
+
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|key|Yes|`"name"`|key field name|
+|2|condition|No|`{ gender: "male" }`|condition to find|
+
+***
+
+## remove()
+
+``` typescript
+remove(condition: any) => Promise<DeleteResult>
+```
+
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|condition|Yes|`{ gender: "male" }`|condition to find|
+
+***
+
+## count()
+
+``` typescript
+count(condition: any) => Promise<number>
+```
+
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|condition|No|`{ gender: "male" }`|condition to find|
+
+***
+
+## insertMany()
+
+``` typescript
+insertMany(items: any[]) => Promise<InsertManyResult<Document>>
+```
+
+### parameters
+|#|name|required|example|description|
+|--:|:--|:--|:--|:--|
+|1|items|Yes|`[{ name: "bob", gender: "male" }]`|items to be inserted|
