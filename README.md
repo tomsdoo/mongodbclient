@@ -1,6 +1,7 @@
 # @tomsd/mongodbclient
 
-It's a handy mongodb client for easy-use.
+It's a handy mongodb client for easy-use.  
+See [mongodbclient.netlify.app](https://mongodbclient.netlify.app/) for details.
 
 ![npm](https://img.shields.io/npm/v/@tomsd/mongodbclient)
 ![NPM](https://img.shields.io/npm/l/@tomsd/mongodbclient)
