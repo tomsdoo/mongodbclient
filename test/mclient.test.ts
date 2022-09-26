@@ -213,4 +213,27 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("dbStats()", async () => {
+    const resultValue = { storageSize: 100 };
+    const connection = {
+      db: {
+        stats: async () => await Promise.resolve(resultValue),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+
+    const mocked = mock(mdbc);
+    mocked.expects("getConnected").once().withArgs().returns(connection);
+
+    assert.equal(
+      await mdbc.dbStats().then(({ storageSize }) => storageSize),
+      100
+    );
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
