@@ -57,4 +57,33 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("read()", async () => {
+    const returningDocuments = [{ name: "test" }];
+    const connection = {
+      collection: {
+        find: (condition: any) => ({
+          toArray: async () => await Promise.resolve(returningDocuments),
+        }),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+
+    const mocked = mock(mdbc);
+    mocked
+      .expects("getConnected")
+      .once()
+      .withArgs()
+      .returns(Promise.resolve(connection));
+
+    assert.equal(
+      JSON.stringify(await mdbc.read({ name: "test" })),
+      JSON.stringify(returningDocuments)
+    );
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
