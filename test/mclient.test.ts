@@ -161,4 +161,24 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("count()", async () => {
+    const resultValue = 100;
+    const connection = {
+      collection: {
+        countDocuments: async (condition: any) =>
+          await Promise.resolve(resultValue),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+    const mocked = mock(mdbc);
+    mocked.expects("getConnected").once().withArgs().returns(connection);
+
+    assert.equal(await mdbc.count({ name: "test" }), resultValue);
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
