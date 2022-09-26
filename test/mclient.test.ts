@@ -112,4 +112,31 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("remove()", async () => {
+    const returningValue = { deletedCount: 1 };
+    const connection = {
+      collection: {
+        deleteMany: async (condition: any) =>
+          await Promise.resolve(returningValue),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+    const mocked = mock(mdbc);
+    mocked
+      .expects("getConnected")
+      .once()
+      .withArgs()
+      .returns(Promise.resolve(connection));
+
+    assert.equal(
+      JSON.stringify(await mdbc.remove({ name: "test" })),
+      JSON.stringify(returningValue)
+    );
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
