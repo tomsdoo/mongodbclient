@@ -86,4 +86,30 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("distinct()", async () => {
+    const returningValues = ["test1", "test2"];
+    const connection = {
+      collection: {
+        distinct: async (key: string) => await Promise.resolve(returningValues),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+    const mocked = mock(mdbc);
+    mocked
+      .expects("getConnected")
+      .once()
+      .withArgs()
+      .returns(Promise.resolve(connection));
+
+    assert.equal(
+      JSON.stringify(await mdbc.distinct("name")),
+      JSON.stringify(returningValues)
+    );
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
