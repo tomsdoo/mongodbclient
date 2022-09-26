@@ -181,4 +181,36 @@ describe("MClient", () => {
     mocked.verify();
     mocked.restore();
   });
+
+  it("insertMany()", async () => {
+    const insertingItems = [
+      { name: "test1" },
+      { name: "test2" },
+      { name: "test3" },
+    ];
+    const connection = {
+      collection: {
+        insertMany: async (savingItems: any[]) =>
+          await Promise.resolve({
+            insertedCount: savingItems.length,
+          }),
+      },
+      client: {
+        close: () => undefined,
+      },
+    };
+
+    const mocked = mock(mdbc);
+    mocked.expects("getConnected").once().withArgs().returns(connection);
+
+    assert.equal(
+      await mdbc
+        .insertMany(insertingItems)
+        .then(({ insertedCount }) => insertedCount),
+      insertingItems.length
+    );
+
+    mocked.verify();
+    mocked.restore();
+  });
 });
