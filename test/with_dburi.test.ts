@@ -1,11 +1,11 @@
-import { describe, it } from "mocha";
+import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
 import { MClient } from "../src/mongodbclient";
-import { strict as assert } from "assert";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 dotenv.config();
 
-const mongouri = process.env.MONGODB_URI as string;
+// eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+const mongouri = process.env.TEST_MONGODB_URI as string;
 const dbName = uuidv4();
 const collName = uuidv4();
 
@@ -19,56 +19,96 @@ const items = [
 ];
 
 describe("MClient", () => {
+  let toBeSkipped: boolean;
+  beforeEach(() => {
+    toBeSkipped = process.env.TEST_MONGODB_URI == null;
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("insertMany()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const { insertedCount } = await mdbc.insertMany(items);
-    assert.equal(insertedCount, items.length);
+    expect(insertedCount).toBe(items.length);
   });
 
   it("getCollections()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const collections = await mdbc.getCollections();
-    assert(collections.length > 0);
+    expect(collections).toSatisfy(
+      (collections: any[]) => collections.length > 0
+    );
   });
 
   it("read()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const docs = await mdbc.read();
-    const getNames = (items: any[]): string =>
-      Array.from(new Set(items.map(({ name }) => name)))
-        .sort((a, b) => (a > b ? 1 : -1))
-        .join("\n");
-    assert.equal(getNames(docs), getNames(docs));
+    const itemNames = items.map(({ name }) => name);
+    expect(docs).toSatisfy((docs: Array<{ name: string }>) =>
+      docs
+        .filter(({ name }) => name)
+        .map(({ name }) => name)
+        .every((name) => itemNames.includes(name))
+    );
   });
 
   it("upsert()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const docs = await mdbc.read();
     const { modifiedCount } = await mdbc.upsert({
       _id: docs[0]._id,
       name: "david",
     });
-    assert.equal(modifiedCount, 1);
+    expect(modifiedCount).toBe(1);
   });
 
   it("distinct()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const names = await mdbc.distinct("name");
-    assert.equal(names.length, 4);
+    expect(names).toHaveLength(4);
   });
 
   it("dbStats()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const { storageSize } = await mdbc.dbStats();
-    assert(storageSize > 0);
+    expect(storageSize).toSatisfy((value: number) => value > 0);
   });
 
   it("stats()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const { storageSize } = await mdbc.stats();
-    assert(storageSize > 0);
+    expect(storageSize).toSatisfy((value: number) => value > 0);
   });
 
   it("count()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const n = await mdbc.count({ name: "alice" });
-    assert.equal(n, 1);
+    expect(n).toBe(1);
   });
 
   it("remove()", async () => {
+    if (toBeSkipped) {
+      return;
+    }
     const { deletedCount } = await mdbc.remove({});
-    assert.equal(deletedCount, items.length);
+    expect(deletedCount).toBe(items.length);
   });
 });

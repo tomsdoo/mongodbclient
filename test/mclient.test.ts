@@ -1,185 +1,192 @@
-import { describe, it } from "mocha";
-import { MClient } from "../src/mongodbclient";
-import { strict as assert } from "assert";
-import { mock } from "sinon";
+import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
+import { MClient, type MongoConnection } from "../src/mongodbclient";
 
 const testConfig = {
   uri: "mongodb+srv://...",
   db: "db",
   collection: "collection",
 };
-let mdbc: MClient;
+
+class ExtendedMClient extends MClient {
+  public async getConnected(): Promise<MongoConnection> {
+    return await super.getConnected();
+  }
+}
+
+let mdbc: ExtendedMClient;
+
+vi.mock("uuid", () => ({
+  v4: () => "dummyUuid",
+}));
 
 describe("MClient", () => {
-  before(() => {
-    mdbc = new MClient(testConfig.uri, testConfig.db, testConfig.collection);
+  beforeEach(() => {
+    mdbc = new ExtendedMClient(
+      testConfig.uri,
+      testConfig.db,
+      testConfig.collection
+    );
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it("property uri", () => {
-    assert.equal(mdbc.uri, testConfig.uri);
+    expect(mdbc).toHaveProperty("uri", testConfig.uri);
   });
 
   it("properti db", () => {
-    assert.equal(mdbc.db, testConfig.db);
+    expect(mdbc).toHaveProperty("db", testConfig.db);
   });
 
   it("property collection", () => {
-    assert.equal(mdbc.collection, testConfig.collection);
+    expect(mdbc).toHaveProperty("collection", testConfig.collection);
   });
 
   it("upsert()", async () => {
+    const spyUpdateOne = vi.fn(
+      async () =>
+        await Promise.resolve({
+          upsertedCount: 1,
+          modifiedCount: 0,
+        })
+    );
     const connection = {
       collection: {
-        updateOne: async (obj: any) =>
-          await Promise.resolve({
-            upsertedCount: 1,
-            modifiedCount: 0,
-          }),
+        updateOne: spyUpdateOne,
       },
       client: {
         close: () => undefined,
       },
     };
-    const mocked = mock(mdbc);
-    mocked
-      .expects("getConnected")
-      .once()
-      .withArgs()
-      .returns(Promise.resolve(connection));
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
 
-    assert.equal(
-      await mdbc
-        .upsert({ name: "test" })
-        .then(({ upsertedCount }) => upsertedCount),
-      1
+    await mdbc.upsert({ name: "test" });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyUpdateOne).toHaveBeenCalledWith(
+      {
+        _id: "dummyUuid",
+      },
+      {
+        $set: {
+          _id: "dummyUuid",
+          name: "test",
+        },
+      },
+      { upsert: true, writeConcern: { w: 1 } }
     );
-
-    mocked.verify();
-    mocked.restore();
   });
 
   it("read()", async () => {
     const returningDocuments = [{ name: "test" }];
+    const spyFindToArray = vi.fn(
+      async () => await Promise.resolve(returningDocuments)
+    );
     const connection = {
       collection: {
         find: (condition: any) => ({
-          toArray: async () => await Promise.resolve(returningDocuments),
+          toArray: spyFindToArray,
         }),
       },
       client: {
         close: () => undefined,
       },
     };
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
 
-    const mocked = mock(mdbc);
-    mocked
-      .expects("getConnected")
-      .once()
-      .withArgs()
-      .returns(Promise.resolve(connection));
-
-    assert.equal(
-      JSON.stringify(await mdbc.read({ name: "test" })),
-      JSON.stringify(returningDocuments)
-    );
-
-    mocked.verify();
-    mocked.restore();
+    await mdbc.read({ name: "test" });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyFindToArray).toHaveBeenCalledTimes(1);
   });
 
   it("distinct()", async () => {
     const returningValues = ["test1", "test2"];
+    const spyDistinct = vi.fn(
+      async () => await Promise.resolve(returningValues)
+    );
     const connection = {
       collection: {
-        distinct: async (key: string) => await Promise.resolve(returningValues),
+        distinct: spyDistinct,
       },
       client: {
         close: () => undefined,
       },
     };
-    const mocked = mock(mdbc);
-    mocked
-      .expects("getConnected")
-      .once()
-      .withArgs()
-      .returns(Promise.resolve(connection));
-
-    assert.equal(
-      JSON.stringify(await mdbc.distinct("name")),
-      JSON.stringify(returningValues)
-    );
-
-    mocked.verify();
-    mocked.restore();
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.distinct("name");
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyDistinct).toHaveBeenCalledWith("name", {});
   });
 
   it("remove()", async () => {
     const returningValue = { deletedCount: 1 };
+    const spyDeleteMany = vi.fn(
+      async () => await Promise.resolve(returningValue)
+    );
     const connection = {
       collection: {
-        deleteMany: async (condition: any) =>
-          await Promise.resolve(returningValue),
+        deleteMany: spyDeleteMany,
       },
       client: {
         close: () => undefined,
       },
     };
-    const mocked = mock(mdbc);
-    mocked
-      .expects("getConnected")
-      .once()
-      .withArgs()
-      .returns(Promise.resolve(connection));
-
-    assert.equal(
-      JSON.stringify(await mdbc.remove({ name: "test" })),
-      JSON.stringify(returningValue)
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.remove({ name: "test" });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyDeleteMany).toHaveBeenCalledWith(
+      { name: "test" },
+      { writeConcern: { w: 1 } }
     );
-
-    mocked.verify();
-    mocked.restore();
   });
 
   it("stats()", async () => {
     const returningValue = { storageSize: 100 };
+    const spyStats = vi.fn(async () => await Promise.resolve(returningValue));
     const connection = {
       collection: {
-        stats: async () => await Promise.resolve(returningValue),
+        stats: spyStats,
       },
       client: {
         close: () => undefined,
       },
     };
-    const mocked = mock(mdbc);
-    mocked.expects("getConnected").once().withArgs().returns(connection);
-
-    assert.equal(
-      await mdbc.stats().then(({ storageSize }) => storageSize),
-      100
-    );
-
-    mocked.verify();
-    mocked.restore();
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.stats();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyStats).toHaveBeenCalledWith();
   });
 
   it("count()", async () => {
     const resultValue = 100;
+    const spyCountDocuments = vi.fn(
+      async () => await Promise.resolve(resultValue)
+    );
     const connection = {
       collection: {
-        countDocuments: async (condition: any) =>
-          await Promise.resolve(resultValue),
+        countDocuments: spyCountDocuments,
       },
       client: {
         close: () => undefined,
       },
     };
-    const mocked = mock(mdbc);
-    mocked.expects("getConnected").once().withArgs().returns(connection);
-
-    assert.equal(await mdbc.count({ name: "test" }), resultValue);
-
-    mocked.verify();
-    mocked.restore();
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.count({ name: "test" });
+    expect(spy).toHaveBeenCalledWith();
+    expect(spyCountDocuments).toHaveBeenCalledWith({ name: "test" });
   });
 
   it("insertMany()", async () => {
@@ -188,52 +195,52 @@ describe("MClient", () => {
       { name: "test2" },
       { name: "test3" },
     ];
+    const spyInsertMany = vi.fn(
+      async (savingItems: any[]) =>
+        await Promise.resolve({
+          insertedCount: savingItems.length,
+        })
+    );
     const connection = {
       collection: {
-        insertMany: async (savingItems: any[]) =>
-          await Promise.resolve({
-            insertedCount: savingItems.length,
-          }),
+        insertMany: spyInsertMany,
       },
       client: {
         close: () => undefined,
       },
     };
 
-    const mocked = mock(mdbc);
-    mocked.expects("getConnected").once().withArgs().returns(connection);
-
-    assert.equal(
-      await mdbc
-        .insertMany(insertingItems)
-        .then(({ insertedCount }) => insertedCount),
-      insertingItems.length
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.insertMany(insertingItems);
+    expect(spy).toHaveBeenCalledWith();
+    expect(spyInsertMany).toHaveBeenCalledWith(
+      insertingItems.map((item) => ({
+        ...item,
+        _id: "dummyUuid",
+      })),
+      { writeConcern: { w: 1 } }
     );
-
-    mocked.verify();
-    mocked.restore();
   });
 
   it("dbStats()", async () => {
     const resultValue = { storageSize: 100 };
+    const spyStats = vi.fn(async () => await Promise.resolve(resultValue));
     const connection = {
       db: {
-        stats: async () => await Promise.resolve(resultValue),
+        stats: spyStats,
       },
       client: {
         close: () => undefined,
       },
     };
 
-    const mocked = mock(mdbc);
-    mocked.expects("getConnected").once().withArgs().returns(connection);
-
-    assert.equal(
-      await mdbc.dbStats().then(({ storageSize }) => storageSize),
-      100
-    );
-
-    mocked.verify();
-    mocked.restore();
+    const spy = vi
+      .spyOn(mdbc, "getConnected")
+      .mockResolvedValue(connection as unknown as MongoConnection);
+    await mdbc.dbStats();
+    expect(spy).toHaveBeenCalledWith();
+    expect(spyStats).toHaveBeenCalledWith();
   });
 });
