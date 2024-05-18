@@ -41,12 +41,12 @@
   },
   "dependencies": {
     "mongodb": "4.7.0",
-    "uuid": "8.3.2"
+    "uuid": "9.0.1"
   },
   "devDependencies": {
     "@tomsd/md-book": "0.16.0",
     "@types/node": "20.12.12",
-    "@types/uuid": "8.3.4",
+    "@types/uuid": "9.0.8",
     "@typescript-eslint/eslint-plugin": "6.4.0",
     "dotenv": "16.0.1",
     "eslint": "8.56.0",
