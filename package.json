@@ -44,7 +44,7 @@
     "uuid": "9.0.1"
   },
   "devDependencies": {
-    "@tomsd/md-book": "0.16.0",
+    "@tomsd/md-book": "1.2.0",
     "@types/node": "20.12.12",
     "@types/uuid": "9.0.8",
     "@typescript-eslint/eslint-plugin": "6.4.0",
