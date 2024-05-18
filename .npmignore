@@ -3,7 +3,7 @@
 docs/
 node_modules/
 src/
-test/
+__test__/
 .env
 .env.default
 .eslintrc.js
