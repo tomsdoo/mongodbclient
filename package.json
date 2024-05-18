@@ -5,6 +5,9 @@
   "main": "dist/mongodbclient.cjs.js",
   "module": "dist/mongodbclient.esm.js",
   "types": "dist/esm/mongodbclient.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup && tsc --project tsconfig.esm.json",
     "format": "npm run format:src && npm run format:test",
