@@ -2,21 +2,20 @@
   "name": "@tomsd/mongodbclient",
   "version": "3.0.12",
   "description": "It's a handy mongodb client for easy-use.",
-  "main": "dist/cjs/mongodbclient.js",
-  "module": "dist/esm/mongodbclient.js",
+  "main": "dist/mongodbclient.cjs.js",
+  "module": "dist/mongodbclient.esm.js",
   "types": "dist/esm/mongodbclient.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
+    "build": "tsup && tsc --project tsconfig.esm.json",
     "format": "npm run format:src && npm run format:test",
     "format:document": "prettier --write docs/**/*.html",
     "format:src": "prettier --write src/**/*.ts",
-    "format:test": "prettier --write test/**/*.ts",
-    "lint:src": "eslint src/**/*.ts",
-    "lint:test": "eslint test/**/*.ts",
-    "prepare": "husky install",
+    "format:test": "prettier --write __test__/**/*.ts",
+    "lint:src": "ESLINT_USE_FLAT_CONFIG=false eslint src/**/*.ts",
+    "lint:test": "ESLINT_USE_FLAT_CONFIG=false eslint __test__/**/*.ts",
+    "prepare": "husky",
     "serve:doc": "mdbook --serve --directory docs",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register \"test/mclient.test.ts\" --timeout 30000",
-    "test_with_dburi": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register \"test/with_dburi.test.ts\" --timeout 30000"
+    "test": "vitest"
   },
   "lint-staged": {
     "docs/**/*.html": [
@@ -26,7 +25,7 @@
       "npm run lint:src",
       "npm run format:src"
     ],
-    "test/**/*.ts": [
+    "__test__/**/*.ts": [
       "npm run lint:test",
       "npm run format:test"
     ]
@@ -41,29 +40,25 @@
     "url": "https://github.com/tomsdoo/mongodbclient"
   },
   "dependencies": {
-    "mongodb": "^4.7.0",
-    "uuid": "^8.3.2"
+    "mongodb": "4.7.0",
+    "uuid": "9.0.1"
   },
   "devDependencies": {
-    "@tomsd/md-book": "^0.16.0",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "^14.14.5",
-    "@types/sinon": "^10.0.13",
-    "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.38.0",
-    "dotenv": "^16.0.1",
-    "eslint": "^8.24.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-standard-with-typescript": "^23.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.3.0",
-    "eslint-plugin-promise": "^6.0.1",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
-    "mocha": "^7.2.0",
-    "prettier": "^2.7.1",
-    "sinon": "^14.0.0",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.8.3"
+    "@tomsd/md-book": "1.2.0",
+    "@types/node": "20.12.12",
+    "@types/uuid": "9.0.8",
+    "@typescript-eslint/eslint-plugin": "7.9.0",
+    "dotenv": "16.4.5",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-n": "17.7.0",
+    "eslint-plugin-promise": "6.1.1",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.2",
+    "prettier": "3.2.5",
+    "tsup": "8.0.2",
+    "typescript": "5.4.5",
+    "vitest": "1.6.0"
   }
 }

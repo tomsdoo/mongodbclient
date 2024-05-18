@@ -7,7 +7,7 @@ See [mongodbclient.netlify.app](https://mongodbclient.netlify.app/) for details.
 ![NPM](https://img.shields.io/npm/l/@tomsd/mongodbclient)
 ![npms.io (quality)](https://img.shields.io/npms-io/quality-score/@tomsd/mongodbclient)
 ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@tomsd/mongodbclient)
-![Maintenance](https://img.shields.io/maintenance/yes/2023)
+![Maintenance](https://img.shields.io/maintenance/yes/2024)
 ![depends on mongodb@4](https://img.shields.io/badge/depends%20on-mongodb@4-informational)
 
 ## Installation

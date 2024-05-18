@@ -3,7 +3,7 @@
  * (c) 2020 tom
  * License: MIT
  */
-import {
+import type {
   Db,
   Collection,
   CollStats,
@@ -72,6 +72,7 @@ export class MClient {
     return client.connect().then((client: typeof MongoClient) => {
       const db = client.db(this.m_db);
       const collection = db.collection(this.m_collection);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return new MongoConnection(client, db, collection);
     });
   }
@@ -86,7 +87,7 @@ export class MClient {
       return await connection.collection.updateOne(
         { _id: savingObj._id },
         { $set: savingObj },
-        { upsert: true, writeConcern: { w: 1 } }
+        { upsert: true, writeConcern: { w: 1 } },
       );
     } finally {
       connection.client.close();
@@ -95,10 +96,11 @@ export class MClient {
 
   public async read(
     condition: any = {},
-    opt?: any
+    opt?: any,
   ): Promise<Array<WithId<Document>>> {
     const connection = await this.getConnected();
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return await connection.collection.find(condition, opt).toArray();
     } finally {
       connection.client.close();
@@ -108,9 +110,11 @@ export class MClient {
   public async distinct(key: string, condition: any = {}): Promise<any[]> {
     const connection = await this.getConnected();
     try {
+      // eslint-disable-next-line
       return (await connection.collection.distinct(
         key,
-        condition
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        condition,
       )) as unknown as any[];
     } finally {
       connection.client.close();
@@ -120,6 +124,7 @@ export class MClient {
   public async remove(condition: any): Promise<DeleteResult> {
     const connection = await this.getConnected();
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return await connection.collection.deleteMany(condition, {
         writeConcern: { w: 1 },
       });
@@ -140,8 +145,10 @@ export class MClient {
   public async count(condition: any = {}): Promise<number> {
     const connection = await this.getConnected();
     try {
+      // eslint-disable-next-line
       return (await connection.collection.countDocuments(
-        condition
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        condition,
       )) as unknown as number;
     } finally {
       connection.client.close();
@@ -155,6 +162,7 @@ export class MClient {
       ...item,
     }));
     try {
+      // eslint-disable-next-line
       return await connection.collection.insertMany(savingItems, {
         writeConcern: { w: 1 },
       });
