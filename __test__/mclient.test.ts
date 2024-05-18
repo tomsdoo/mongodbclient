@@ -24,7 +24,7 @@ describe("MClient", () => {
     mdbc = new ExtendedMClient(
       testConfig.uri,
       testConfig.db,
-      testConfig.collection
+      testConfig.collection,
     );
   });
 
@@ -50,7 +50,7 @@ describe("MClient", () => {
         await Promise.resolve({
           upsertedCount: 1,
           modifiedCount: 0,
-        })
+        }),
     );
     const connection = {
       collection: {
@@ -76,14 +76,14 @@ describe("MClient", () => {
           name: "test",
         },
       },
-      { upsert: true, writeConcern: { w: 1 } }
+      { upsert: true, writeConcern: { w: 1 } },
     );
   });
 
   it("read()", async () => {
     const returningDocuments = [{ name: "test" }];
     const spyFindToArray = vi.fn(
-      async () => await Promise.resolve(returningDocuments)
+      async () => await Promise.resolve(returningDocuments),
     );
     const connection = {
       collection: {
@@ -107,7 +107,7 @@ describe("MClient", () => {
   it("distinct()", async () => {
     const returningValues = ["test1", "test2"];
     const spyDistinct = vi.fn(
-      async () => await Promise.resolve(returningValues)
+      async () => await Promise.resolve(returningValues),
     );
     const connection = {
       collection: {
@@ -128,7 +128,7 @@ describe("MClient", () => {
   it("remove()", async () => {
     const returningValue = { deletedCount: 1 };
     const spyDeleteMany = vi.fn(
-      async () => await Promise.resolve(returningValue)
+      async () => await Promise.resolve(returningValue),
     );
     const connection = {
       collection: {
@@ -145,7 +145,7 @@ describe("MClient", () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spyDeleteMany).toHaveBeenCalledWith(
       { name: "test" },
-      { writeConcern: { w: 1 } }
+      { writeConcern: { w: 1 } },
     );
   });
 
@@ -171,7 +171,7 @@ describe("MClient", () => {
   it("count()", async () => {
     const resultValue = 100;
     const spyCountDocuments = vi.fn(
-      async () => await Promise.resolve(resultValue)
+      async () => await Promise.resolve(resultValue),
     );
     const connection = {
       collection: {
@@ -199,7 +199,7 @@ describe("MClient", () => {
       async (savingItems: any[]) =>
         await Promise.resolve({
           insertedCount: savingItems.length,
-        })
+        }),
     );
     const connection = {
       collection: {
@@ -220,7 +220,7 @@ describe("MClient", () => {
         ...item,
         _id: "dummyUuid",
       })),
-      { writeConcern: { w: 1 } }
+      { writeConcern: { w: 1 } },
     );
   });
 

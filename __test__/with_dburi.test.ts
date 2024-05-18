@@ -42,7 +42,7 @@ describe("MClient", () => {
     }
     const collections = await mdbc.getCollections();
     expect(collections).toSatisfy(
-      (collections: any[]) => collections.length > 0
+      (collections: any[]) => collections.length > 0,
     );
   });
 
@@ -56,7 +56,7 @@ describe("MClient", () => {
       docs
         .filter(({ name }) => name)
         .map(({ name }) => name)
-        .every((name) => itemNames.includes(name))
+        .every((name) => itemNames.includes(name)),
     );
   });
 
