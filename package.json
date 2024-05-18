@@ -1,6 +1,6 @@
 {
   "name": "@tomsd/mongodbclient",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "It's a handy mongodb client for easy-use.",
   "main": "dist/mongodbclient.cjs.js",
   "module": "dist/mongodbclient.esm.js",
