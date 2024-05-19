@@ -8,7 +8,7 @@ See [mongodbclient.netlify.app](https://mongodbclient.netlify.app/) for details.
 ![npms.io (quality)](https://img.shields.io/npms-io/quality-score/@tomsd/mongodbclient)
 ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/@tomsd/mongodbclient)
 ![Maintenance](https://img.shields.io/maintenance/yes/2024)
-![depends on mongodb@4](https://img.shields.io/badge/depends%20on-mongodb@4-informational)
+![depends on mongodb@6](https://img.shields.io/badge/depends%20on-mongodb@6-informational)
 
 ## Installation
 ``` sh
@@ -48,9 +48,6 @@ const items = [
 
   const names = await mdbc.distinct("name");
   console.log(`distinct names: ${names.length}`); // 4
-
-  const { storageSize } = await mdbc.stats();
-  console.log(`storageSize: ${storageSize}`);
 
   const itemLength = await mdbc.count();
   console.log(`count: ${itemLength}`); // 4
