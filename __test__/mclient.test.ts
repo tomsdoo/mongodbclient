@@ -150,11 +150,13 @@ describe("MClient", () => {
   });
 
   it("stats()", async () => {
-    const returningValue = { storageSize: 100 };
-    const spyStats = vi.fn(async () => await Promise.resolve(returningValue));
+    const returningValue = { storageStats: { storageSize: 100 } };
+    const spyAggregate = vi.fn(
+      async () => await Promise.resolve(returningValue),
+    );
     const connection = {
       collection: {
-        stats: spyStats,
+        aggregate: spyAggregate,
       },
       client: {
         close: () => undefined,
@@ -165,7 +167,18 @@ describe("MClient", () => {
       .mockResolvedValue(connection as unknown as MongoConnection);
     await mdbc.stats();
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spyStats).toHaveBeenCalledWith();
+    expect(spyAggregate).toHaveBeenCalledWith([
+      {
+        $collStats: {
+          latencyStats: {
+            histograms: true,
+          },
+          count: {},
+          queryExecStats: {},
+          storageStats: { scale: 1 },
+        },
+      },
+    ]);
   });
 
   it("count()", async () => {

@@ -92,8 +92,14 @@ describe("MClient", () => {
     if (toBeSkipped) {
       return;
     }
-    const { storageSize } = await mdbc.stats();
-    expect(storageSize).toSatisfy((value: number) => value > 0);
+    const result = await mdbc.stats();
+    expect(result).not.toBe(null);
+    if (result != null) {
+      const {
+        storageStats: { storageSize },
+      } = result;
+      expect(storageSize).toSatisfy((value: number) => value > 0);
+    }
   });
 
   it("count()", async () => {

@@ -1,34 +1,29 @@
-/*!
- * @license mongodbclient
- * (c) 2020 tom
- * License: MIT
- */
 import type {
   Db,
   Collection,
-  CollStats,
   DeleteResult,
   Document,
+  Filter,
+  FindOptions,
   InsertManyResult,
+  OptionalId,
   UpdateResult,
   WithId,
 } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const MongoClient = require("mongodb").MongoClient;
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 export class MongoConnection {
-  private readonly _client: typeof MongoClient;
+  private readonly _client: MongoClient;
   private readonly _db: Db;
   private readonly _collection: Collection;
-  constructor(client: typeof MongoClient, db: Db, collection: Collection) {
+  constructor(client: MongoClient, db: Db, collection: Collection) {
     this._client = client;
     this._db = db;
     this._collection = collection;
   }
 
-  get client(): typeof MongoClient {
+  get client(): MongoClient {
     return this._client;
   }
 
@@ -68,11 +63,12 @@ export class MClient {
   }
 
   protected async getConnected(): Promise<MongoConnection> {
-    const client = new MongoClient(this.m_uri, { useUnifiedTopology: true });
-    return client.connect().then((client: typeof MongoClient) => {
+    const client = new MongoClient(this.m_uri, {
+      serverApi: ServerApiVersion.v1,
+    });
+    return await client.connect().then((client) => {
       const db = client.db(this.m_db);
       const collection = db.collection(this.m_collection);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return new MongoConnection(client, db, collection);
     });
   }
@@ -90,7 +86,7 @@ export class MClient {
         { upsert: true, writeConcern: { w: 1 } },
       );
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
@@ -100,58 +96,78 @@ export class MClient {
   ): Promise<Array<WithId<Document>>> {
     const connection = await this.getConnected();
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return await connection.collection.find(condition, opt).toArray();
+      return await connection.collection
+        .find(
+          condition as Filter<Document>,
+          opt as FindOptions<Document> | undefined,
+        )
+        .toArray();
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
   public async distinct(key: string, condition: any = {}): Promise<any[]> {
     const connection = await this.getConnected();
     try {
-      // eslint-disable-next-line
       return (await connection.collection.distinct(
         key,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        condition,
+        condition as Filter<Document>,
       )) as unknown as any[];
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
   public async remove(condition: any): Promise<DeleteResult> {
     const connection = await this.getConnected();
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return await connection.collection.deleteMany(condition, {
-        writeConcern: { w: 1 },
-      });
+      return await connection.collection.deleteMany(
+        condition as Filter<Document>,
+        {
+          writeConcern: { w: 1 },
+        },
+      );
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
-  public async stats(): Promise<CollStats> {
+  public async stats(): Promise<Document | null> {
     const connection = await this.getConnected();
     try {
-      return await connection.collection.stats();
+      const [collStats] = await connection.collection
+        .aggregate([
+          {
+            $collStats: {
+              latencyStats: {
+                histograms: true,
+              },
+              count: {},
+              queryExecStats: {},
+              storageStats: {
+                scale: 1,
+              },
+            },
+          },
+        ])
+        .toArray();
+      return collStats;
+    } catch (e) {
+      return null;
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
   public async count(condition: any = {}): Promise<number> {
     const connection = await this.getConnected();
     try {
-      // eslint-disable-next-line
       return (await connection.collection.countDocuments(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        condition,
+        condition as Filter<Document>,
       )) as unknown as number;
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
@@ -162,12 +178,14 @@ export class MClient {
       ...item,
     }));
     try {
-      // eslint-disable-next-line
-      return await connection.collection.insertMany(savingItems, {
-        writeConcern: { w: 1 },
-      });
+      return await connection.collection.insertMany(
+        savingItems as Array<OptionalId<Document>>,
+        {
+          writeConcern: { w: 1 },
+        },
+      );
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
@@ -176,7 +194,7 @@ export class MClient {
     try {
       return await connection.db.stats();
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 
@@ -185,7 +203,7 @@ export class MClient {
     try {
       return await connection.db.collections();
     } finally {
-      connection.client.close();
+      await connection.client.close();
     }
   }
 }
