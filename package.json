@@ -2,14 +2,18 @@
   "name": "@tomsd/mongodbclient",
   "version": "4.0.0",
   "description": "It's a handy mongodb client for easy-use.",
-  "main": "dist/mongodbclient.cjs.js",
-  "module": "dist/mongodbclient.esm.js",
-  "types": "dist/esm/mongodbclient.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/mongodbclient.d.ts",
+      "import": "./dist/mongodbclient.esm.js",
+      "require": "./dist/mogodbclient.cjs.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc --project tsconfig.esm.json",
+    "build": "tsup",
     "lint": "biome check",
     "prepare": "husky",
     "serve:doc": "mdbook --serve --directory docs",

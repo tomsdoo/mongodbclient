@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "target": "es2015",
-    "module": "es2015",
-    "outDir": "./dist/esm/"
-  },
-  "files": ["src/mongodbclient.ts"]
-}
