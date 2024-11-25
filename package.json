@@ -10,27 +10,21 @@
   ],
   "scripts": {
     "build": "tsup && tsc --project tsconfig.esm.json",
-    "format": "npm run format:src && npm run format:test",
-    "format:document": "prettier --write docs/**/*.html",
-    "format:src": "prettier --write src/**/*.ts",
-    "format:test": "prettier --write __test__/**/*.ts",
-    "lint:src": "ESLINT_USE_FLAT_CONFIG=false eslint src/**/*.ts",
-    "lint:test": "ESLINT_USE_FLAT_CONFIG=false eslint __test__/**/*.ts",
+    "lint": "biome check",
     "prepare": "husky",
     "serve:doc": "mdbook --serve --directory docs",
+    "test:local": "docker run --name mongodb-mongodbclient --rm -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=password mongodb/mongodb-community-server:6.0.3-ubuntu2204 && npx vitest run && docker container stop mongodb-mongodbclient",
     "test": "vitest"
   },
   "lint-staged": {
     "docs/**/*.html": [
-      "npm run format:document"
+      "npm run lint"
     ],
     "src/**/*.ts": [
-      "npm run lint:src",
-      "npm run format:src"
+      "npm run lint"
     ],
     "__test__/**/*.ts": [
-      "npm run lint:test",
-      "npm run format:test"
+      "npm run lint"
     ]
   },
   "keywords": [
@@ -47,19 +41,13 @@
     "uuid": "9.0.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@tomsd/md-book": "1.2.0",
     "@types/node": "20.12.12",
     "@types/uuid": "9.0.8",
-    "@typescript-eslint/eslint-plugin": "7.9.0",
     "dotenv": "16.4.5",
-    "eslint": "8.57.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-n": "17.7.0",
-    "eslint-plugin-promise": "6.1.1",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
-    "prettier": "3.2.5",
     "tsup": "8.0.2",
     "typescript": "5.4.5",
     "vitest": "1.6.0"

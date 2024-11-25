@@ -4,9 +4,7 @@
     "target": "es2015",
     "module": "commonjs",
     "outDir": "./dist/cjs/",
-    "declaration": false,
+    "declaration": false
   },
-  "files":[
-    "src/mongodbclient.ts"
-  ]
+  "files": ["src/mongodbclient.ts"]
 }

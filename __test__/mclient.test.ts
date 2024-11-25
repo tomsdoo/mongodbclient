@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MClient, type MongoConnection } from "../src/mongodbclient";
 
 const testConfig = {
@@ -87,7 +87,7 @@ describe("MClient", () => {
     );
     const connection = {
       collection: {
-        find: (condition: any) => ({
+        find: () => ({
           toArray: spyFindToArray,
         }),
       },

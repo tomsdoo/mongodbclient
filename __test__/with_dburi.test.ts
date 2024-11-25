@@ -1,11 +1,10 @@
-import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
-import { MClient } from "../src/mongodbclient";
-import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import { v4 as uuidv4 } from "uuid";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MClient } from "../src/mongodbclient";
 dotenv.config();
 
-// eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-const mongouri = process.env.TEST_MONGODB_URI as string;
+const mongouri = process.env.MONGODB_URI as string;
 const dbName = uuidv4();
 const collName = uuidv4();
 
@@ -21,7 +20,7 @@ const items = [
 describe("MClient", () => {
   let toBeSkipped: boolean;
   beforeEach(() => {
-    toBeSkipped = process.env.TEST_MONGODB_URI == null;
+    toBeSkipped = process.env.DO_LOCAL_TEST !== "true";
   });
 
   afterEach(() => {
@@ -30,6 +29,7 @@ describe("MClient", () => {
 
   it("insertMany()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const { insertedCount } = await mdbc.insertMany(items);
@@ -38,6 +38,7 @@ describe("MClient", () => {
 
   it("getCollections()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const collections = await mdbc.getCollections();
@@ -48,6 +49,7 @@ describe("MClient", () => {
 
   it("read()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const docs = await mdbc.read();
@@ -62,6 +64,7 @@ describe("MClient", () => {
 
   it("upsert()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const docs = await mdbc.read();
@@ -74,6 +77,7 @@ describe("MClient", () => {
 
   it("distinct()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const names = await mdbc.distinct("name");
@@ -82,6 +86,7 @@ describe("MClient", () => {
 
   it("dbStats()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const { storageSize } = await mdbc.dbStats();
@@ -90,6 +95,7 @@ describe("MClient", () => {
 
   it("stats()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const result = await mdbc.stats();
@@ -104,6 +110,7 @@ describe("MClient", () => {
 
   it("count()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const n = await mdbc.count({ name: "alice" });
@@ -112,6 +119,7 @@ describe("MClient", () => {
 
   it("remove()", async () => {
     if (toBeSkipped) {
+      console.log("skipped..");
       return;
     }
     const { deletedCount } = await mdbc.remove({});

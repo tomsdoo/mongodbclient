@@ -3,9 +3,7 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "es2015",
-     "outDir": "./dist/esm/",
+    "outDir": "./dist/esm/"
   },
-  "files":[
-    "src/mongodbclient.ts"
-  ]
+  "files": ["src/mongodbclient.ts"]
 }
