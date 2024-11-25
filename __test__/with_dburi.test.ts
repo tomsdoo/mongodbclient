@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MClient } from "../src/mongodbclient";
 dotenv.config();
 
-// eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
 const mongouri = process.env.TEST_MONGODB_URI as string;
 const dbName = uuidv4();
 const collName = uuidv4();
