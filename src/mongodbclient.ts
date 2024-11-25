@@ -1,6 +1,6 @@
 import type {
-  Db,
   Collection,
+  Db,
   DeleteResult,
   Document,
   Filter,
@@ -10,8 +10,8 @@ import type {
   UpdateResult,
   WithId,
 } from "mongodb";
-import { v4 as uuidv4 } from "uuid";
 import { MongoClient, ServerApiVersion } from "mongodb";
+import { v4 as uuidv4 } from "uuid";
 
 export class MongoConnection {
   private readonly _client: MongoClient;
@@ -93,7 +93,7 @@ export class MClient {
   public async read(
     condition: any = {},
     opt?: any,
-  ): Promise<Array<WithId<Document>>> {
+  ): Promise<WithId<Document>[]> {
     const connection = await this.getConnected();
     try {
       return await connection.collection
@@ -153,7 +153,7 @@ export class MClient {
         ])
         .toArray();
       return collStats;
-    } catch (e) {
+    } catch (_) {
       return null;
     } finally {
       await connection.client.close();
@@ -179,6 +179,7 @@ export class MClient {
     }));
     try {
       return await connection.collection.insertMany(
+        // biome-ignore lint: Array<T>
         savingItems as Array<OptionalId<Document>>,
         {
           writeConcern: { w: 1 },
