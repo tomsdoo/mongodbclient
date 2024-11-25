@@ -1,6 +1,6 @@
 {
   "name": "@tomsd/mongodbclient",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "It's a handy mongodb client for easy-use.",
   "exports": {
     ".": {
