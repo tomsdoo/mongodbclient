@@ -6,7 +6,7 @@
     ".": {
       "types": "./dist/mongodbclient.d.ts",
       "import": "./dist/mongodbclient.esm.js",
-      "require": "./dist/mogodbclient.cjs.js"
+      "require": "./dist/mongodbclient.cjs.js"
     }
   },
   "files": [
