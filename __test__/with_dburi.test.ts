@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MClient } from "../src/mongodbclient";
 dotenv.config();
 
-const mongouri = process.env.TEST_MONGODB_URI as string;
+const mongouri = process.env.MONGODB_URI as string;
 const dbName = uuidv4();
 const collName = uuidv4();
 
@@ -20,7 +20,7 @@ const items = [
 describe("MClient", () => {
   let toBeSkipped: boolean;
   beforeEach(() => {
-    toBeSkipped = process.env.TEST_MONGODB_URI == null;
+    toBeSkipped = process.env.DO_LOCAL_TEST !== "true";
   });
 
   afterEach(() => {
