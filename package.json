@@ -16,9 +16,11 @@
     "build": "tsup",
     "lint": "biome check",
     "prepare": "husky",
+    "start-db": "docker run --name mongodb-mongodbclient --rm -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=password mongodb/mongodb-community-server:6.0.3-ubuntu2204",
+    "stop-db": "docker container stop mongodb-mongodbclient",
     "serve:doc": "mdbook --serve --directory docs",
-    "test:local": "docker run --name mongodb-mongodbclient --rm -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=password mongodb/mongodb-community-server:6.0.3-ubuntu2204 && npx vitest run && docker container stop mongodb-mongodbclient",
-    "test": "vitest"
+    "test": "vitest --project node",
+    "test:local": "vitest --project local"
   },
   "lint-staged": {
     "docs/**/*.html": [
