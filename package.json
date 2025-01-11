@@ -16,8 +16,8 @@
     "build": "tsup",
     "lint": "biome check",
     "prepare": "husky",
-    "start-db": "docker run --name mongodb-mongodbclient --rm -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=password mongodb/mongodb-community-server:6.0.3-ubuntu2204",
-    "stop-db": "docker container stop mongodb-mongodbclient",
+    "start-db": "docker compose up -d",
+    "stop-db": "docker compose down",
     "serve:doc": "mdbook --serve --directory docs",
     "test": "vitest --project node",
     "test:local": "vitest --project local"

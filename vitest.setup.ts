@@ -19,5 +19,5 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  void execute("npm run stop-db");
-});
+  await execute("npm run stop-db");
+}, 20 * 1000);
