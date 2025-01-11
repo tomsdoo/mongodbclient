@@ -23,14 +23,8 @@
     "test:local": "vitest --project local"
   },
   "lint-staged": {
-    "docs/**/*.html": [
-      "npm run lint"
-    ],
-    "src/**/*.ts": [
-      "npm run lint"
-    ],
-    "__test__/**/*.ts": [
-      "npm run lint"
+    "**/*.{js,ts}": [
+      "biome check"
     ]
   },
   "keywords": [
