@@ -15,10 +15,9 @@ function execute(cmd: string) {
 }
 
 beforeAll(async () => {
-  await execute("docker compose up -d");
-  await execute("sleep 5");
+  await execute("npm run start-db");
 });
 
 afterAll(async () => {
-  void execute("docker compose down");
+  void execute("npm run stop-db");
 });
