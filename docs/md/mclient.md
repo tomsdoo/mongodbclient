@@ -7,7 +7,7 @@ classDiagram
 class MClient {
   +constructor(uri: string, db: string, collection: string)
   +upsert(pobj: any) Promise~UpdateResult~
-  +read(condition: any, opt?: any) Promise~Document[]~
+  +read~T~(condition: any, opt?: any) Promise~T[]~
   +distinct~T~(key: string, condition?: any) Promise~T[]~
   +remove(condition: any) Promise~DeleteResult~
   +count(condition?: any) Promise~number~
@@ -21,7 +21,7 @@ class MClient {
 ## read()
 
 ``` typescript
-read(condition: any, opt?: any) => Promise<Array<WithId<Document>>>
+read<T = WithId<Document>>(condition: any, opt?: any) => Promise<T[]>
 ```
 ### parameters
 |#|name|required|example|description|
