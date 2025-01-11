@@ -107,13 +107,16 @@ export class MClient {
     }
   }
 
-  public async distinct(key: string, condition: any = {}): Promise<any[]> {
+  public async distinct<T = any>(
+    key: string,
+    condition: any = {},
+  ): Promise<T[]> {
     const connection = await this.getConnected();
     try {
       return (await connection.collection.distinct(
         key,
         condition as Filter<Document>,
-      )) as unknown as any[];
+      )) as unknown as T[];
     } finally {
       await connection.client.close();
     }
