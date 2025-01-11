@@ -16,7 +16,7 @@ function execute(cmd: string) {
 
 beforeAll(async () => {
   await execute("npm run start-db");
-});
+}, 30 * 1000);
 
 afterAll(async () => {
   await execute("npm run stop-db");
