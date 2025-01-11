@@ -15,7 +15,7 @@ See [npm @tomsd/mongodbclient](https://www.npmjs.com/package/@tomsd/mongodbclien
 
 ## installation
 ``` shell
-npm install @tomsd/mongodbcliekt
+npm install @tomsd/mongodbclient
 ```
 
 ## usage
