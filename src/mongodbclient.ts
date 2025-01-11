@@ -90,18 +90,18 @@ export class MClient {
     }
   }
 
-  public async read(
+  public async read<T = WithId<Document>>(
     condition: any = {},
     opt?: any,
-  ): Promise<WithId<Document>[]> {
+  ): Promise<T[]> {
     const connection = await this.getConnected();
     try {
-      return await connection.collection
+      return (await connection.collection
         .find(
           condition as Filter<Document>,
           opt as FindOptions<Document> | undefined,
         )
-        .toArray();
+        .toArray()) as unknown as T[];
     } finally {
       await connection.client.close();
     }
