@@ -7,8 +7,8 @@ classDiagram
 class MClient {
   +constructor(uri: string, db: string, collection: string)
   +upsert(pobj: any) Promise~UpdateResult~
-  +read(condition: any, opt?: any) Promise~DocumentArray~
-  +distinct(key: string, condition?: any) Promise~AnyArray~
+  +read(condition: any, opt?: any) Promise~Document[]~
+  +distinct~T~(key: string, condition?: any) Promise~T[]~
   +remove(condition: any) Promise~DeleteResult~
   +count(condition?: any) Promise~number~
   +insertMany(items: any[]) Promise~InsertManyResult~
@@ -47,7 +47,7 @@ upsert(pobj: any) => Promise<UpdateResult>
 ## distinct()
 
 ``` typescript
-distinct(key: string, condition: any = {}) => Promise<any[]>
+distinct<T = any>(key: string, condition: any = {}) => Promise<T[]>
 ```
 
 ### parameters
