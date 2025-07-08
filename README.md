@@ -11,7 +11,7 @@ See [mongodbclient.netlify.app](https://mongodbclient.netlify.app/) for details.
 ![top language](https://img.shields.io/github/languages/top/tomsdoo/mongodbclient?style=social&logo=typescript)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=social&logo=github)
 ![depends on mongodb@6](https://img.shields.io/badge/mongodb-mongodb@6-informational?style=social&logo=mongodb)
-![depends on node greater or equal 18](https://img.shields.io/badge/node.js-%3E%3D%2018-lightyellow?style=social&logo=nodedotjs)
+![depends on node greater or equal 20](https://img.shields.io/badge/node.js-%3E%3D%2020-lightyellow?style=social&logo=nodedotjs)
 
 ## Installation
 ``` sh
