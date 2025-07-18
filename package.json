@@ -2,6 +2,7 @@
   "name": "@tomsd/mongodbclient",
   "version": "4.2.0",
   "description": "It's a handy mongodb client for easy-use.",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/mongodbclient.d.ts",
@@ -45,7 +46,7 @@
     "@tomsd/md-book": "2.0.0",
     "@types/node": "24.0.13",
     "@types/uuid": "10.0.0",
-    "dotenv": "16.5.0",
+    "dotenv": "17.2.0",
     "husky": "9.1.7",
     "lint-staged": "16.1.2",
     "tsup": "8.5.0",
