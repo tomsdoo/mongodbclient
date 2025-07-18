@@ -1,5 +1,5 @@
-import { fileURLToPath } from "url";
 import { loadEnvFile } from "process";
+import { fileURLToPath } from "url";
 import { defineConfig } from "vitest/config";
 import defaultConfig from "./vitest.config";
 
