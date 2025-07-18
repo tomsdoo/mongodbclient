@@ -2,6 +2,7 @@
   "name": "@tomsd/mongodbclient",
   "version": "4.2.0",
   "description": "It's a handy mongodb client for easy-use.",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/mongodbclient.d.ts",
