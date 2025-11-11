@@ -97,10 +97,7 @@ export class MClient {
     const connection = await this.getConnected();
     try {
       return (await connection.collection
-        .find(
-          condition as Filter<Document>,
-          opt as FindOptions<Document> | undefined,
-        )
+        .find(condition as Filter<Document>, opt as FindOptions | undefined)
         .toArray()) as unknown as T[];
     } finally {
       await connection.client.close();
