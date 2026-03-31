@@ -6,6 +6,7 @@ import type {
   Filter,
   FindOptions,
   InsertManyResult,
+  MongoClientOptions,
   OptionalId,
   UpdateResult,
   WithId,
@@ -64,8 +65,12 @@ export class MClient {
 
   protected async getConnected(): Promise<MongoConnection> {
     const client = new MongoClient(this.m_uri, {
-      serverApi: ServerApiVersion.v1,
-    });
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: false,
+        deprecationErrors: true,
+      },
+    } as MongoClientOptions);
     return await client.connect().then((client) => {
       const db = client.db(this.m_db);
       const collection = db.collection(this.m_collection);
