@@ -67,7 +67,7 @@ export class MClient {
     const client = new MongoClient(this.m_uri, {
       serverApi: {
         version: ServerApiVersion.v1,
-        strict: true,
+        strict: false,
         deprecationErrors: true,
       },
     } as MongoClientOptions);
