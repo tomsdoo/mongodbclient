@@ -10,7 +10,7 @@ See [npm @tomsd/mongodbclient](https://www.npmjs.com/package/@tomsd/mongodbclien
 ![checks](https://img.shields.io/github/check-runs/tomsdoo/mongodbclient/main?style=social&logo=github)
 ![top language](https://img.shields.io/github/languages/top/tomsdoo/mongodbclient?style=social&logo=typescript)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=social&logo=github)
-![depends on mongodb@6](https://img.shields.io/badge/mongodb-mongodb@6-informational?style=social&logo=mongodb)
+![depends on mongodb@7](https://img.shields.io/badge/mongodb-mongodb@7-informational?style=social&logo=mongodb)
 ![depends on node greater or equal 20](https://img.shields.io/badge/node.js-%3E%3D%2020-lightyellow?style=social&logo=nodedotjs)
 
 ## installation
