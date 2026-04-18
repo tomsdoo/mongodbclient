@@ -5,16 +5,16 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/mongodbclient.d.ts",
-      "import": "./dist/mongodbclient.esm.js",
-      "require": "./dist/mongodbclient.cjs.js"
+      "types": "./dist/mongodbclient.d.mts",
+      "import": "./dist/mongodbclient.mjs",
+      "require": "./dist/mongodbclient.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json",
+    "build": "tsdown",
     "lint": "biome check",
     "prepare": "husky",
     "start-db": "docker compose up -d",
@@ -49,7 +49,7 @@
     "dotenv": "17.4.2",
     "husky": "9.1.7",
     "lint-staged": "16.4.0",
-    "tsup": "8.5.1",
+    "tsdown": "0.21.9",
     "typescript": "6.0.2",
     "vitest": "4.1.4"
   }
