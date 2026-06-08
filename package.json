@@ -43,13 +43,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.16",
-    "@tomsd/md-book": "2.0.10",
-    "@types/node": "25.9.1",
+    "@tomsd/md-book": "2.1.0",
+    "@types/node": "25.9.2",
     "@types/uuid": "11.0.0",
     "dotenv": "17.4.2",
     "husky": "9.1.7",
     "lint-staged": "17.0.7",
-    "tsdown": "0.22.1",
+    "tsdown": "0.22.2",
     "typescript": "6.0.3",
     "vitest": "4.1.8"
   }
