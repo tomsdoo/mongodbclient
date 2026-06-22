@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "mongodb": "7.3.0",
-    "uuid": "14.0.0"
+    "uuid": "14.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
