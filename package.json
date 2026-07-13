@@ -38,7 +38,7 @@
     "url": "https://github.com/tomsdoo/mongodbclient"
   },
   "dependencies": {
-    "mongodb": "7.4.0",
+    "mongodb": "7.5.0",
     "uuid": "14.0.1"
   },
   "devDependencies": {
