@@ -42,7 +42,7 @@
     "uuid": "14.0.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.8",
+    "@biomejs/biome": "2.5.10",
     "@tomsd/md-book": "2.1.0",
     "@types/node": "26.2.0",
     "@types/uuid": "11.0.0",
@@ -51,6 +51,6 @@
     "lint-staged": "17.3.0",
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   }
 }
