@@ -213,5 +213,3 @@ export class MClient {
     }
   }
 }
-
-export default MClient;
