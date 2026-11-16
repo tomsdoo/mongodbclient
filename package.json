@@ -42,11 +42,11 @@
     "uuid": "14.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.6",
+    "@biomejs/biome": "2.6.7",
     "@tomsd/md-book": "2.1.0",
     "@types/node": "26.6.6",
     "@types/uuid": "11.0.0",
-    "dotenv": "18.0.9",
+    "dotenv": "18.0.10",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "tsdown": "0.23.7",
